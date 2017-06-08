@@ -161,7 +161,7 @@ private forceLogin() {
 private login() { return (!(state.session.expiration > now())) ? doLogin() : true }
 
 private doLogin() { 
-	apiGet("/api/user/validate", [username: settings.username, password: settings.password] ) { response ->
+	apiGet("/api/v4/User/Validate", [username: settings.username, password: settings.password] ) { response ->
 		if (response.status == 200) {
 			if (response.data.SecurityToken != null) {
 				state.session.brandID = response.data.BrandId
@@ -181,7 +181,7 @@ private doLogin() {
 // Listing all the garage doors you have in MyQ
 private getDoorList() { 	    
 	def deviceList = [:]
-	apiGet("/api/v4/userdevicedetails/get", []) { response ->
+	apiGet("/api/v4/UserDeviceDetails/Get", []) { response ->
 		if (response.status == 200) {
 			response.data.Devices.each { device ->
 				// 2 = garage door, 5 = gate, 7 = MyQGarage(no gateway), 17 = Garage Door Opener WGDO
@@ -203,7 +203,7 @@ private getDoorList() {
 // Listing all the light controller you have in MyQ
 private getLightList() { 	    
 	def deviceList = [:]
-	apiGet("/api/v4/userdevicedetails/get", []) { response ->
+	apiGet("/api/v4/UserDeviceDetails/Get", []) { response ->
 		if (response.status == 200) {
 			response.data.Devices.each { device ->
 				if (device.MyQDeviceTypeId == 3) {
@@ -221,7 +221,7 @@ private getLightList() {
 
 private getDeviceList() { 	    
 	def deviceList = []
-	apiGet("/api/v4/userdevicedetails/get", []) { response ->
+	apiGet("/api/v4/UserDeviceDetails/Get", []) { response ->
 		if (response.status == 200) {
 			response.data.Devices.each { device ->
 				log.debug "MyQDeviceTypeId : " + device.MyQDeviceTypeId.toString()
@@ -248,7 +248,7 @@ private getApiAppID() {
 	if (settings.brand == "Craftsman") {
 		return "QH5AzY8MurrilYsbcG1f6eMTffMCm3cIEyZaSdK/TD/8SvlKAWUAmodIqa5VqVAs"
 	} else {
-		return "JVM/G9Nwih5BwKgNCjLxiFUQxQijAebyyg8QUHr7JOrP+tuPb8iHfRHKwTmDzHOu"
+		return "Vj8pQggXLhLy0WHahglCD4N1nAkkXQtGYpq2HrHD7H1nvmbT55KqtN6RSF4ILB/i"
 	}
 }
 	
@@ -339,7 +339,7 @@ def getDeviceLastActivity(child) {
 def sendCommand(child, attributeName, attributeValue) {
 	if (login()) {	    	
 		//Send command
-		apiPut("/api/v4/deviceattribute/putdeviceattribute", [ MyQDeviceId: getChildDeviceID(child), AttributeName: attributeName, AttributeValue: attributeValue ]) 	
+		apiPut("/api/v4/DeviceAttribute/PutDeviceAttribute", [ MyQDeviceId: getChildDeviceID(child), AttributeName: attributeName, AttributeValue: attributeValue ]) 	
 		return true
 	} 
 }
